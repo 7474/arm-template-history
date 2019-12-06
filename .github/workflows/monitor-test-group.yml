@@ -1,0 +1,42 @@
+name: monitor-test-group
+# https://github.com/marketplace/actions/azure-cli-action
+
+on: [push]
+#on:
+#  schedule:
+#    - cron: '05 13 * * *'
+
+jobs:
+
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+ 
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Azure CLI script file
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.0.72
+        inlineScript: |
+          az group export --name test > test.json.txt
+
+    - name: Push ARM template to GitHub
+      run: |
+        if [ -n "$(git status --porcelain)" ]; then
+          git config --global user.name "koudenpa"
+          git config --global user.email "koudenpa@hotmail.com"
+          git add monitors.json
+          git commit -m 'Update test group ARM template.'
+          git remote set-url origin https://7474:${GITHUB_TOKEN}@github.com/7474/arm-template-history.git
+          git push
+        else
+          echo "No change"
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
