@@ -1,5 +1,6 @@
 name: monitor-test-group
 # https://github.com/marketplace/actions/azure-cli-action
+# https://github.com/Azure/login
 
 on: [push]
 #on:
