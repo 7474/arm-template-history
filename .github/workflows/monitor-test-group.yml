@@ -31,7 +31,7 @@ jobs:
         if [ -n "$(git status --porcelain)" ]; then
           git config --global user.name "koudenpa"
           git config --global user.email "koudenpa@hotmail.com"
-          git add monitors.json
+          git add test.json.txt
           git commit -m 'Update test group ARM template.'
           git remote set-url origin https://7474:${GITHUB_TOKEN}@github.com/7474/arm-template-history.git
           git push
